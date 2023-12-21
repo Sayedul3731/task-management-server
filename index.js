@@ -28,11 +28,25 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
     const toDoListsCollection = client.db("taskDB").collection("toDoLists")
+    const onGoingListsCollection = client.db("taskDB").collection("onGoingLists")
+    const completeListsCollection = client.db("taskDB").collection("completeLists")
 
     app.post("/toDo", async (req, res) => {
         const newTask = req.body;
         console.log(newTask);
         const result = await toDoListsCollection.insertOne(newTask)
+        res.send(result)
+    })
+    app.post("/onGoing", async (req, res) => {
+        const newTask = req.body;
+        console.log(newTask);
+        const result = await onGoingListsCollection.insertOne(newTask)
+        res.send(result)
+    })
+    app.post("/complete", async (req, res) => {
+        const newTask = req.body;
+        console.log(newTask);
+        const result = await completeListsCollection.insertOne(newTask)
         res.send(result)
     })
 
