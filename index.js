@@ -1,6 +1,6 @@
 const express = require('express')
 const cors = require('cors')
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express()
 require('dotenv').config()
 const port = process.env.PORT || 5000;
@@ -61,6 +61,24 @@ async function run() {
  
     app.get("/completedTasks/:email", async(req,res) => {
         const result = await completeListsCollection.find({email: req.params.email}).toArray()
+        res.send(result)
+    })
+    app.delete("/toDo/:id", async(req,res) => {
+      const id = req.params.id;
+      const query = { _id : new ObjectId(id)}
+        const result = await toDoListsCollection.deleteOne(query)
+        res.send(result)
+    })
+    app.delete("/onGoing/:id", async(req,res) => {
+      const id = req.params.id;
+      const query = { _id : new ObjectId(id)}
+        const result = await onGoingListsCollection.deleteOne(query)
+        res.send(result)
+    })
+    app.delete("/complete/:id", async(req,res) => {
+      const id = req.params.id;
+      const query = { _id : new ObjectId(id)}
+        const result = await completeListsCollection.deleteOne(query)
         res.send(result)
     })
  
