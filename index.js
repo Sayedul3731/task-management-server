@@ -49,6 +49,21 @@ async function run() {
         const result = await completeListsCollection.insertOne(newTask)
         res.send(result)
     })
+    app.get("/toDoTasks/:email", async(req,res) => {
+        const result = await toDoListsCollection.find({email: req.params.email}).toArray()
+        res.send(result)
+    })
+ 
+    app.get("/onGoingTasks/:email", async(req,res) => {
+        const result = await onGoingListsCollection.find({email: req.params.email}).toArray()
+        res.send(result)
+    })
+ 
+    app.get("/completedTasks/:email", async(req,res) => {
+        const result = await completeListsCollection.find({email: req.params.email}).toArray()
+        res.send(result)
+    })
+ 
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
