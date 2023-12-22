@@ -30,11 +30,12 @@ async function run() {
     const toDoListsCollection = client.db("taskDB").collection("toDoLists")
     const onGoingListsCollection = client.db("taskDB").collection("onGoingLists")
     const completeListsCollection = client.db("taskDB").collection("completeLists")
+    const personalTasksCollection = client.db("taskDB").collection("personalTasks")
 
-    app.post("/toDo", async (req, res) => {
+    app.post("/newTask", async (req, res) => {
         const newTask = req.body;
         console.log(newTask);
-        const result = await toDoListsCollection.insertOne(newTask)
+        const result = await personalTasksCollection.insertOne(newTask)
         res.send(result)
     })
     app.post("/onGoing", async (req, res) => {
@@ -50,7 +51,11 @@ async function run() {
         res.send(result)
     })
     app.get("/toDoTasks/:email", async(req,res) => {
-        const result = await toDoListsCollection.find({email: req.params.email}).toArray()
+        const result = await personalTasksCollection.find({email: req.params.email}).toArray()
+        res.send(result)
+    })
+    app.get("/personalTasks/:email", async(req,res) => {
+        const result = await personalTasksCollection.find({email: req.params.email}).toArray()
         res.send(result)
     })
  
@@ -67,6 +72,12 @@ async function run() {
       const id = req.params.id;
       const query = { _id : new ObjectId(id)}
         const result = await toDoListsCollection.deleteOne(query)
+        res.send(result)
+    })
+    app.delete("/newTask/:id", async(req,res) => {
+      const id = req.params.id;
+      const query = { _id : new ObjectId(id)}
+        const result = await personalTasksCollection.deleteOne(query)
         res.send(result)
     })
     app.delete("/onGoing/:id", async(req,res) => {
@@ -87,7 +98,7 @@ async function run() {
       const newInfo = req.body;
       const updateDoc = {
           $set: {
-            task: newInfo.toDoTask
+            task: newInfo.toDoUpdateTask
           }
       }
       console.log('update id & newInfo', id, newInfo);
@@ -100,7 +111,7 @@ async function run() {
       const newInfo = req.body;
       const updateDoc = {
           $set: {
-            task: newInfo.onGoingTask
+            task: newInfo.onGoingUpdateTask
           }
       }
       console.log('update id & newInfo', id, newInfo);
@@ -113,7 +124,7 @@ async function run() {
       const newInfo = req.body;
       const updateDoc = {
           $set: {
-            task: newInfo.completeTask
+            task: newInfo.completeUpdateTask
           }
       }
       console.log('update id & newInfo', id, newInfo);
