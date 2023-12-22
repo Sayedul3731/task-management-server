@@ -81,6 +81,46 @@ async function run() {
         const result = await completeListsCollection.deleteOne(query)
         res.send(result)
     })
+
+    app.patch('/toDo/:id', async(req, res) => {
+      const id = req.params.id
+      const newInfo = req.body;
+      const updateDoc = {
+          $set: {
+            task: newInfo.toDoTask
+          }
+      }
+      console.log('update id & newInfo', id, newInfo);
+      const filter = {_id: new ObjectId(id)}
+      const result = await toDoListsCollection.updateOne(filter, updateDoc)
+      res.send(result)
+    })
+    app.patch('/onGoing/:id', async(req, res) => {
+      const id = req.params.id
+      const newInfo = req.body;
+      const updateDoc = {
+          $set: {
+            task: newInfo.onGoingTask
+          }
+      }
+      console.log('update id & newInfo', id, newInfo);
+      const filter = {_id: new ObjectId(id)}
+      const result = await onGoingListsCollection.updateOne(filter, updateDoc)
+      res.send(result)
+    })
+    app.patch('/complete/:id', async(req, res) => {
+      const id = req.params.id
+      const newInfo = req.body;
+      const updateDoc = {
+          $set: {
+            task: newInfo.completeTask
+          }
+      }
+      console.log('update id & newInfo', id, newInfo);
+      const filter = {_id: new ObjectId(id)}
+      const result = await completeListsCollection.updateOne(filter, updateDoc)
+      res.send(result)
+    })
  
 
     // Send a ping to confirm a successful connection
