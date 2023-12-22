@@ -38,18 +38,6 @@ async function run() {
         const result = await personalTasksCollection.insertOne(newTask)
         res.send(result)
     })
-    app.post("/onGoing", async (req, res) => {
-        const newTask = req.body;
-        console.log(newTask);
-        const result = await onGoingListsCollection.insertOne(newTask)
-        res.send(result)
-    })
-    app.post("/complete", async (req, res) => {
-        const newTask = req.body;
-        console.log(newTask);
-        const result = await completeListsCollection.insertOne(newTask)
-        res.send(result)
-    })
     app.get("/toDoTasks/:email", async(req,res) => {
         const result = await personalTasksCollection.find({email: req.params.email}).toArray()
         res.send(result)
@@ -91,6 +79,23 @@ async function run() {
       const query = { _id : new ObjectId(id)}
         const result = await completeListsCollection.deleteOne(query)
         res.send(result)
+    })
+
+    app.patch('/newTask/:id', async(req, res) => {
+      const id = req.params.id
+      const newInfo = req.body;
+      const updateDoc = {
+          $set: {
+            title: newInfo?.title,
+            description: newInfo?.description,
+            deadline: newInfo?.deadline,
+            priority: newInfo?.priority
+          }
+      }
+      console.log('update id & newInfo', id, newInfo);
+      const filter = {_id: new ObjectId(id)}
+      const result = await personalTasksCollection.updateOne(filter, updateDoc)
+      res.send(result)
     })
 
     app.patch('/toDo/:id', async(req, res) => {
